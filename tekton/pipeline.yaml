@@ -1,0 +1,89 @@
+---
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: technova-weather-app
+  namespace: demo-project
+spec:
+  params:
+    - name: ARGOCD_SERVER
+      type: string
+      default: openshift-gitops-server.openshift-gitops.svc:80
+    - name: ARGOCD_USERNAME
+      type: string
+      default: admin
+    - name: ARGOCD_PASSWORD
+      type: string
+      default: bsL0umRWzfDXQhiApgV657OKNkFZ9xvr
+    - name: REPO_URL
+      type: string
+      default: "https://github.com/skoussou/springboot-reactjs-app-2.git"
+    - name: DEST_NAMESPACE
+      type: string
+      default: demo-project
+    - name: DEST_SERVER
+      type: string
+      default: "https://kubernetes.default.svc"
+    - name: IMAGE_APP_PATH
+      type: string
+      default: "deploy/k8s/image"
+    - name: MAIN_APP_PATH
+      type: string
+      default: "deploy/k8s/app"
+
+  tasks:
+    - name: deploy-technova-apps
+      taskSpec:
+        params:
+          - name: ARGOCD_SERVER
+          - name: ARGOCD_USERNAME
+          - name: ARGOCD_PASSWORD
+          - name: REPO_URL
+          - name: DEST_NAMESPACE
+          - name: DEST_SERVER
+          - name: IMAGE_APP_PATH
+          - name: MAIN_APP_PATH
+        steps:
+          - name: deploy
+            image: quay.io/argoproj/argocd
+            script: |
+              #!/bin/sh
+              set -e
+              echo "Logging into ArgoCD..."
+              argocd login $(params.ARGOCD_SERVER) \
+                --username $(params.ARGOCD_USERNAME) \
+                --password $(params.ARGOCD_PASSWORD) \
+                --insecure --grpc-web --plaintext
+
+              echo "Deploying image builder app..."
+              argocd app create app-image-build \
+                --repo $(params.REPO_URL) \
+                --path $(params.IMAGE_APP_PATH) \
+                --dest-namespace $(params.DEST_NAMESPACE) \
+                --dest-server $(params.DEST_SERVER) || echo "App already exists"
+              argocd app sync app-image-build
+
+              echo "Deploying main weather app..."
+              argocd app create spring-boot-app \
+                --repo $(params.REPO_URL) \
+                --path $(params.MAIN_APP_PATH) \
+                --dest-namespace $(params.DEST_NAMESPACE) \
+                --dest-server $(params.DEST_SERVER) || echo "App already exists"
+              argocd app sync spring-boot-app
+      params:
+        - name: ARGOCD_SERVER
+          value: $(params.ARGOCD_SERVER)
+        - name: ARGOCD_USERNAME
+          value: $(params.ARGOCD_USERNAME)
+        - name: ARGOCD_PASSWORD
+          value: $(params.ARGOCD_PASSWORD)
+        - name: REPO_URL
+          value: $(params.REPO_URL)
+        - name: DEST_NAMESPACE
+          value: $(params.DEST_NAMESPACE)
+        - name: DEST_SERVER
+          value: $(params.DEST_SERVER)
+        - name: IMAGE_APP_PATH
+          value: $(params.IMAGE_APP_PATH)
+        - name: MAIN_APP_PATH
+          value: $(params.MAIN_APP_PATH)

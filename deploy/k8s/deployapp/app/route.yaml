@@ -1,0 +1,29 @@
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: springboot-route
+  namespace: demo-project
+spec:
+  to:
+    kind: Service
+    name: springboot-service
+  port:
+    targetPort: 7890
+  tls:
+    termination: edge
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: react-app-route
+  namespace: demo-project
+spec:
+  to:
+    kind: Service
+    name: react-app-service
+  port:
+    targetPort: 3000
+  tls:
+    termination: edge
+    

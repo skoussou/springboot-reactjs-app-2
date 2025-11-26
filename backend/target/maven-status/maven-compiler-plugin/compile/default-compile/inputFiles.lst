@@ -1,0 +1,6 @@
+/home/yogita/rebuild_rhdh_weather_app/RHDH-Golden-Path-Template/templates/spring-boot-app/skeleton/backend/src/main/java/com/myapp/weather/ServletInitializer.java
+/home/yogita/rebuild_rhdh_weather_app/RHDH-Golden-Path-Template/templates/spring-boot-app/skeleton/backend/src/main/java/com/myapp/weather/WeatherApplication.java
+/home/yogita/rebuild_rhdh_weather_app/RHDH-Golden-Path-Template/templates/spring-boot-app/skeleton/backend/src/main/java/com/myapp/weather/controller/WeatherController.java
+/home/yogita/rebuild_rhdh_weather_app/RHDH-Golden-Path-Template/templates/spring-boot-app/skeleton/backend/src/main/java/com/myapp/weather/exception/ResourceNotFoundException.java
+/home/yogita/rebuild_rhdh_weather_app/RHDH-Golden-Path-Template/templates/spring-boot-app/skeleton/backend/src/main/java/com/myapp/weather/model/Weather.java
+/home/yogita/rebuild_rhdh_weather_app/RHDH-Golden-Path-Template/templates/spring-boot-app/skeleton/backend/src/main/java/com/myapp/weather/repository/WeatherRepository.java

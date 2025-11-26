@@ -1,0 +1,38 @@
+---
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  name: technova-weather-app-pipeline 
+  namespace: demo-project
+spec:
+  pipelineRef:
+    name: technova-weather-app
+  params:
+    - name: ARGOCD_SERVER
+      value: openshift-gitops-server.openshift-gitops.svc:80
+    - name: ARGOCD_USERNAME
+      value: admin
+    - name: ARGOCD_PASSWORD
+      value: bsL0umRWzfDXQhiApgV657OKNkFZ9xvr
+    - name: REPO_URL
+      value: "https://github.com/skoussou/springboot-reactjs-app-2.git"
+    - name: DEST_NAMESPACE
+      value: demo-project
+    - name: DEST_SERVER
+      value: "https://kubernetes.default.svc"
+    - name: IMAGE_APP_PATH
+      value: "deploy/k8s/image"
+    - name: MAIN_APP_PATH
+      value: "deploy/k8s/app"
+  taskRunTemplate:
+    serviceAccountName: pipeline
+  workspaces:
+    - name: output
+      volumeClaimTemplate:
+        metadata:
+          name: git-clone-pvc
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 1Gi

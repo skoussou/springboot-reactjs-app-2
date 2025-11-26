@@ -1,0 +1,3 @@
+resources:
+  - pipeline.yaml
+  - pipeline-run.yaml
